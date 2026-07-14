@@ -12,7 +12,14 @@ import userModel from "./models/user.model.js";
 const port = process.env.PORT || 3000;
 const server = http.createServer(app);
 const onlineUsers = new Map();
+function normalizeWhitespace(text) {
 
+    return text
+        .replace(/\r\n/g, "\n")
+        .replace(/\s+/g, " ")
+        .trim();
+
+}
 const io = new Server(server, {cors:{
     origin: '*'
 }});
@@ -178,10 +185,9 @@ const updatedFileTree = {
 
 for (const operation of aiResponse.operations || []) {
 
-    if (
-        operation.type === "create" ||
-        operation.type === "modify"
-    ) {
+    // ---------------- CREATE ----------------
+
+    if (operation.type === "create") {
 
         updatedFileTree[operation.path] = {
             file: {
@@ -189,7 +195,80 @@ for (const operation of aiResponse.operations || []) {
             },
         };
 
+        continue;
     }
+
+    // ---------------- REPLACE ----------------
+
+if (operation.type === "replace") {
+
+    const existingFile = updatedFileTree[operation.path];
+
+    if (!existingFile) {
+
+        console.log(`File not found: ${operation.path}`);
+        continue;
+
+    }
+
+    let contents = existingFile.file.contents;
+
+    // ---------- Exact Match ----------
+
+    if (contents.includes(operation.find)) {
+
+        contents = contents.replace(
+            operation.find,
+            operation.replace
+        );
+
+        console.log(`Patched ${operation.path} (Exact Match)`);
+
+    }
+
+    // ---------- Whitespace Match ----------
+
+    else {
+
+        const normalizedContents = normalizeWhitespace(contents);
+        const normalizedFind = normalizeWhitespace(operation.find);
+
+        if (normalizedContents.includes(normalizedFind)) {
+
+            const escaped = operation.find
+                .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+                .replace(/\s+/g, "\\s+");
+
+            const regex = new RegExp(escaped);
+
+            contents = contents.replace(
+                regex,
+                operation.replace
+            );
+
+            console.log(`Patched ${operation.path} (Whitespace Match)`);
+
+        } else {
+
+            console.log(`Patch failed in ${operation.path}`);
+            console.log("Could not find:");
+            console.log(operation.find);
+
+            continue;
+
+        }
+
+    }
+
+    updatedFileTree[operation.path] = {
+        ...existingFile,
+        file: {
+            ...existingFile.file,
+            contents,
+        },
+    };
+
+}
 
 }
 console.log("========== UPDATED FILE TREE ==========");

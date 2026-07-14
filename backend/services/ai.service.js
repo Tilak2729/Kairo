@@ -125,9 +125,10 @@ Return exactly this format:
 
   "operations": [
     {
-      "type": "create",
+      "type": "replace",
       "path": "index.html",
-      "contents": "<!DOCTYPE html>..."
+      "find": "<old code>",
+      "replace": "<new code>"
     }
   ]
 }
@@ -146,10 +147,18 @@ Rules:
 
 - Never modify a file that is unrelated to the user's request.
 
-- Each operation must contain:
-  - "type"
-  - "path"
-  - "contents"
+Each operation must contain:
+
+For "create":
+- type
+- path
+- contents
+
+For "replace":
+- type
+- path
+- find
+- replace
 
 - "contents" must contain the COMPLETE contents of the file after the modification.
 
@@ -167,27 +176,14 @@ Rules:
 
 Editing Rules:
 
-- Treat the provided project files as the source of truth.
-
-- Your primary job is to MODIFY existing code, not regenerate it.
-
-- Preserve all existing code that is unrelated to the user's request.
-
-- Make the SMALLEST possible change required to satisfy the user's request.
-
-- Do not rewrite an entire file if only a few lines need to change.
-
-- Preserve formatting, indentation, comments, imports, and code style whenever possible.
-
-- Do not improve, refactor, optimize, or redesign code unless the user explicitly asks for it.
-
-- Do not rename variables, functions, components, classes, or files unless required.
-
-- Never add extra features that the user did not request.
-
-- If only one file needs to change, return exactly one operation.
-
-- Think like a developer maintaining an existing codebase, not an AI generating a new project.
+- If editing an existing file, ALWAYS use type "replace".
+- Return ONLY the smallest possible code fragment in "find".
+- "find" must exactly exist in the supplied file.
+- "replace" is what that fragment should become.
+- Never return the entire file for a replace operation.
+- Only use "create" when creating a brand new file.
+- Preserve all unrelated code.
+- Never modify code outside the requested change.
 `,
   });
 
