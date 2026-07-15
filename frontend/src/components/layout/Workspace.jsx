@@ -11,7 +11,7 @@ const Workspace = ({
 
     return (
 
-        <div className="flex flex-1 overflow-hidden h-full">
+        <div className="flex flex-1 overflow-hidden h-full bg-[#1e1e1e]">
 
 <div
     style={{ width: `${chatWidth}px` }}
@@ -25,9 +25,11 @@ const Workspace = ({
 {isChatCollapsed && (
     <button
         onClick={toggleChat}
-        className="absolute inset-0 bg-slate-800 text-white hover:bg-slate-700"
+        title="Show chat"
+        className="group absolute inset-0 bg-[#252526] hover:bg-[#2a2d2e] text-[#858585] hover:text-[#3794ff] transition-colors duration-150 flex flex-col items-center pt-3 gap-2 border-r border-[#2d2d2d]"
     >
-        ▶
+        <i className="ri-chat-3-line text-lg transition-transform duration-150 group-hover:scale-110"></i>
+        <i className="ri-arrow-right-s-line text-base"></i>
     </button>
 )}
 

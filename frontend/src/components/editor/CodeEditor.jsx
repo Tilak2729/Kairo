@@ -9,6 +9,24 @@ const CodeEditor = ({
     sendFileUpdate,
 }) => {
 
+    if (!currentFile) {
+
+        return (
+
+            <div className="flex-1 flex flex-col items-center justify-center bg-[#1e1e1e] text-[#858585] gap-2">
+
+                <i className="ri-file-code-line text-4xl"></i>
+
+                <p className="text-sm">
+                    Select a file to start editing
+                </p>
+
+            </div>
+
+        );
+
+    }
+
     return (
 
         <div className="flex-1">
@@ -28,6 +46,14 @@ const CodeEditor = ({
                         ? fileTree[currentFile]?.file?.contents
                         : ""
                 }
+                options={{
+                    fontSize: 14,
+                    fontFamily: "'JetBrains Mono', 'Fira Code', Menlo, monospace",
+                    minimap: { enabled: true },
+                    padding: { top: 12 },
+                    smoothScrolling: true,
+                    cursorBlinking: "smooth",
+                }}
                 onChange={(value) => {
 
                     if (!currentFile) return;

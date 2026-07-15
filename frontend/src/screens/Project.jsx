@@ -122,7 +122,14 @@ function send() {
 
 const WriteAiMessage = (message) => {
     return (
-        <div className='overflow-auto bg-slate-950 text-white rounded-sm p-2 whitespace-pre'>
+        <div
+            className="bg-[#1e1e1e] text-[#d4d4d4] font-mono text-[13px] leading-relaxed rounded border border-[#2d2d2d] p-3 max-w-full min-w-0
+            break-words whitespace-pre-wrap
+            [&_pre]:whitespace-pre-wrap [&_pre]:break-words [&_pre]:max-w-full [&_pre]:overflow-x-hidden
+            [&_code]:whitespace-pre-wrap [&_code]:break-words [&_code]:max-w-full
+            [&_table]:block [&_table]:max-w-full [&_table]:overflow-x-auto
+            [&_img]:max-w-full"
+        >
             <Markdown
                 children={message}
             />
@@ -132,7 +139,7 @@ const WriteAiMessage = (message) => {
 
     
 return (
-  <main className="h-screen w-screen flex">
+  <main className="h-screen w-screen flex bg-[#1e1e1e] text-[#cccccc] font-sans antialiased">
 
     {/* LEFT PANEL */}
 <Workspace
@@ -144,34 +151,40 @@ return (
 
     left={
 
-        <section className="relative flex flex-col h-full bg-slate-300">
+        <section className="relative flex flex-col h-full bg-[#1e1e1e] border-r border-[#2d2d2d]">
 
-<header className="flex justify-between items-center p-2 px-4 w-full bg-slate-200 absolute z-20 top-0">
+<header className="flex justify-between items-center h-11 px-3 w-full bg-[#252526] border-b border-[#2d2d2d] absolute z-20 top-0 select-none">
 
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-1">
 
         <button
             onClick={toggleChat}
-            className="p-2 cursor-pointer"
+            title="Collapse panel"
+            className="p-1.5 rounded-sm cursor-pointer text-[#cccccc]/70 hover:text-[#cccccc] hover:bg-[#2a2d2e] transition-colors duration-100"
         >
-            <i className="ri-arrow-left-s-line"></i>
+            <i className="ri-arrow-left-s-line text-base"></i>
         </button>
 
         <button
-            className="flex gap-2 cursor-pointer"
+            className="flex items-center gap-1.5 cursor-pointer text-[12px] font-medium px-2.5 py-1.5 rounded-sm text-[#cccccc]/90 hover:bg-[#2a2d2e] hover:text-white transition-colors duration-100"
             onClick={() => setIsModalOpen(true)}
         >
-            <i className="ri-add-large-fill mr-1"></i>
-            <p>Add Collaborators</p>
+            <i className="ri-add-large-fill text-[13px] text-[#3794ff]"></i>
+            <p className="tracking-tight">Add Collaborators</p>
         </button>
 
     </div>
 
     <button
         onClick={() => setisSidePanelOpen(!isSidePanelOpen)}
-        className="p-2 cursor-pointer"
+        title="Toggle collaborators"
+        className={`p-1.5 rounded-sm cursor-pointer transition-colors duration-100 ${
+            isSidePanelOpen
+                ? "text-[#3794ff] bg-[#2a2d2e]"
+                : "text-[#cccccc]/70 hover:text-[#cccccc] hover:bg-[#2a2d2e]"
+        }`}
     >
-        <i className="ri-group-fill"></i>
+        <i className="ri-group-fill text-base"></i>
     </button>
 
 </header>
