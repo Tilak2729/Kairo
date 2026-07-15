@@ -6,13 +6,16 @@ import {
     sendFileUpdate
 } from "../config/socket";
 import { UserContext } from '../context/user.context'
-import EditorPanel from "../components/editor/EditorPanel";
+import EditorWorkspace from "../components/editor/EditorWorkspace";
 import AddCollaboratorModal from "../components/modal/AddCollaboratorModal";
 import CollaboratorSidebar from "../components/chat/CollaboratorSidebar";
 import ChatPanel from "../components/chat/ChatPanel";
 import useProject from "../hooks/useProject";
 import useSocketConnection from "../hooks/useSocketConnection";
 import useTyping from "../hooks/useTyping";
+import { starterProject } from "../utils/starterProject";
+import Workspace from "../components/layout/Workspace";
+import useResizableLayout from "../hooks/useResizableLayout";
 import Markdown from 'markdown-to-jsx';
 
 
@@ -37,7 +40,12 @@ const Project = () => {
     setFileTree,
 } = useProject(location.state.project);
     
-
+const {
+    chatWidth,
+    explorerWidth,
+    startChatResize,
+    startExplorerResize,
+} = useResizableLayout();
 
 
 const [currentFile, setCurrentFile] = useState(null);
@@ -79,6 +87,13 @@ const {
         })
 
     }
+    function createStarterFiles() {
+
+    setFileTree(starterProject);
+
+    setCurrentFile("index.html");
+
+}
 
 function send() {
 
@@ -120,54 +135,74 @@ return (
   <main className="h-screen w-screen flex">
 
     {/* LEFT PANEL */}
-    <section className="left relative flex flex-col h-screen min-w-96 bg-slate-300">
+<Workspace
 
-      <header className="flex justify-between items-center p-2 px-4 w-full bg-slate-200 absolute z-20 top-0">
-        <button
-          className="flex gap-2 cursor-pointer"
-          onClick={() => setIsModalOpen(true)}
-        >
-          <i className="ri-add-large-fill mr-1"></i>
-          <p>Add Collaborators</p>
-        </button>
+    chatWidth={chatWidth}
+    startChatResize={startChatResize}
 
-        <button
-          onClick={() => setisSidePanelOpen(!isSidePanelOpen)}
-          className="p-2 cursor-pointer"
-        >
-          <i className="ri-group-fill"></i>
-        </button>
-      </header>
+    left={
 
-<ChatPanel
-    messages={messages}
-    user={user}
-    message={message}
-    setMessage={setMessage}
-    send={send}
-    typingUser={typingUser}
-    messageBox={messageBox}
-    WriteAiMessage={WriteAiMessage}
-    handleTyping={handleTyping}
-/>
+        <section className="relative flex flex-col h-full bg-slate-300">
 
-<CollaboratorSidebar
-    isOpen={isSidePanelOpen}
-    setIsOpen={setisSidePanelOpen}
-    project={project}
-    onlineUsers={onlineUsers}
-/>
+            <header className="flex justify-between items-center p-2 px-4 w-full bg-slate-200 absolute z-20 top-0">
 
-    </section>
+                <button
+                    className="flex gap-2 cursor-pointer"
+                    onClick={() => setIsModalOpen(true)}
+                >
+                    <i className="ri-add-large-fill mr-1"></i>
+                    <p>Add Collaborators</p>
+                </button>
 
-    <EditorPanel
-    fileTree={fileTree}
-    setFileTree={setFileTree}
-    currentFile={currentFile}
-    setCurrentFile={setCurrentFile}
-    saveTimeout={saveTimeout}
-    isRemoteUpdate={isRemoteUpdate}
-    sendFileUpdate={sendFileUpdate}
+                <button
+                    onClick={() => setisSidePanelOpen(!isSidePanelOpen)}
+                    className="p-2 cursor-pointer"
+                >
+                    <i className="ri-group-fill"></i>
+                </button>
+
+            </header>
+
+            <ChatPanel
+                messages={messages}
+                user={user}
+                message={message}
+                setMessage={setMessage}
+                send={send}
+                typingUser={typingUser}
+                messageBox={messageBox}
+                WriteAiMessage={WriteAiMessage}
+                handleTyping={handleTyping}
+            />
+
+            <CollaboratorSidebar
+                isOpen={isSidePanelOpen}
+                setIsOpen={setisSidePanelOpen}
+                project={project}
+                onlineUsers={onlineUsers}
+            />
+
+        </section>
+
+    }
+
+    center={
+
+        <EditorWorkspace
+            fileTree={fileTree}
+            setFileTree={setFileTree}
+            currentFile={currentFile}
+            setCurrentFile={setCurrentFile}
+            saveTimeout={saveTimeout}
+            isRemoteUpdate={isRemoteUpdate}
+            sendFileUpdate={sendFileUpdate}
+            onCreateFiles={createStarterFiles}
+            explorerWidth={explorerWidth}
+            startExplorerResize={startExplorerResize}
+        />
+
+    }
+
 />
 
 
