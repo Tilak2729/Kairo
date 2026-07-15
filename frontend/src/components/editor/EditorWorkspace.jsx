@@ -13,6 +13,8 @@ const EditorWorkspace = ({
     onCreateFiles,
      explorerWidth,
      startExplorerResize,
+     isExplorerCollapsed,
+    toggleExplorer,
 }) => {
 
     return (
@@ -39,11 +41,20 @@ const EditorWorkspace = ({
     setCurrentFile={setCurrentFile}
     onCreateFiles={onCreateFiles}
     explorerWidth={explorerWidth}
+    isExplorerCollapsed={isExplorerCollapsed}
+    toggleExplorer={toggleExplorer}
+
 />
 
-<Divider
-    onMouseDown={startExplorerResize}
-/>
+{
+    !isExplorerCollapsed && (
+
+        <Divider
+            onMouseDown={startExplorerResize}
+        />
+
+    )
+}
 
 <CodeEditor
     fileTree={fileTree}

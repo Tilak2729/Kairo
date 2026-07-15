@@ -45,6 +45,10 @@ const {
     explorerWidth,
     startChatResize,
     startExplorerResize,
+    isChatCollapsed,
+    toggleChat,
+    isExplorerCollapsed,
+    toggleExplorer,
 } = useResizableLayout();
 
 
@@ -126,10 +130,6 @@ const WriteAiMessage = (message) => {
     );
 };
 
-
-
-
-
     
 return (
   <main className="h-screen w-screen flex">
@@ -139,29 +139,42 @@ return (
 
     chatWidth={chatWidth}
     startChatResize={startChatResize}
+    isChatCollapsed={isChatCollapsed}
+    toggleChat={toggleChat}
 
     left={
 
         <section className="relative flex flex-col h-full bg-slate-300">
 
-            <header className="flex justify-between items-center p-2 px-4 w-full bg-slate-200 absolute z-20 top-0">
+<header className="flex justify-between items-center p-2 px-4 w-full bg-slate-200 absolute z-20 top-0">
 
-                <button
-                    className="flex gap-2 cursor-pointer"
-                    onClick={() => setIsModalOpen(true)}
-                >
-                    <i className="ri-add-large-fill mr-1"></i>
-                    <p>Add Collaborators</p>
-                </button>
+    <div className="flex items-center gap-2">
 
-                <button
-                    onClick={() => setisSidePanelOpen(!isSidePanelOpen)}
-                    className="p-2 cursor-pointer"
-                >
-                    <i className="ri-group-fill"></i>
-                </button>
+        <button
+            onClick={toggleChat}
+            className="p-2 cursor-pointer"
+        >
+            <i className="ri-arrow-left-s-line"></i>
+        </button>
 
-            </header>
+        <button
+            className="flex gap-2 cursor-pointer"
+            onClick={() => setIsModalOpen(true)}
+        >
+            <i className="ri-add-large-fill mr-1"></i>
+            <p>Add Collaborators</p>
+        </button>
+
+    </div>
+
+    <button
+        onClick={() => setisSidePanelOpen(!isSidePanelOpen)}
+        className="p-2 cursor-pointer"
+    >
+        <i className="ri-group-fill"></i>
+    </button>
+
+</header>
 
             <ChatPanel
                 messages={messages}
@@ -199,6 +212,8 @@ return (
             onCreateFiles={createStarterFiles}
             explorerWidth={explorerWidth}
             startExplorerResize={startExplorerResize}
+            isExplorerCollapsed={isExplorerCollapsed}
+    toggleExplorer={toggleExplorer}
         />
 
     }

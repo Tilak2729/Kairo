@@ -1,9 +1,13 @@
-import { useState } from "react";
-
+import { useRef, useState } from "react";
 const useResizableLayout = () => {
 
     const [chatWidth, setChatWidth] = useState(360);
     const [explorerWidth, setExplorerWidth] = useState(240);
+
+const [isChatCollapsed, setIsChatCollapsed] = useState(false);
+const previousChatWidth = useRef(360);
+const [isExplorerCollapsed, setIsExplorerCollapsed] = useState(false);
+const previousExplorerWidth = useRef(240);
 
     const startChatResize = (e) => {
 
@@ -36,6 +40,46 @@ const useResizableLayout = () => {
         document.addEventListener("mouseup", handleMouseUp);
 
     };
+
+const toggleChat = () => {
+
+    if (!isChatCollapsed) {
+
+        previousChatWidth.current = chatWidth;
+
+        setChatWidth(40);
+
+        setIsChatCollapsed(true);
+
+    } else {
+
+        setChatWidth(previousChatWidth.current);
+
+        setIsChatCollapsed(false);
+
+    }
+
+};
+
+const toggleExplorer = () => {
+
+    if (!isExplorerCollapsed) {
+
+        previousExplorerWidth.current = explorerWidth;
+
+        setExplorerWidth(40);
+
+        setIsExplorerCollapsed(true);
+
+    } else {
+
+        setExplorerWidth(previousExplorerWidth.current);
+
+        setIsExplorerCollapsed(false);
+
+    }
+
+};
 
 const startExplorerResize = (e) => {
 
@@ -84,6 +128,10 @@ const startExplorerResize = (e) => {
 
         startChatResize,
         startExplorerResize,
+        isChatCollapsed,
+        toggleChat,
+        isExplorerCollapsed,
+toggleExplorer,
 
     };
 
