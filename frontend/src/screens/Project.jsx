@@ -82,11 +82,15 @@ const {
         axios.put("/projects/add-user", {
             projectId: project._id,
             users: Array.from(selectedUserId)
-        }).then(res => {
-            console.log(res.data)
-            setIsModalOpen(false)
+        }).then((res) => {
 
-        }).catch(err => {
+    setProject(res.data.project);
+
+    setSelectedUserId(new Set());
+
+    setIsModalOpen(false);
+
+}).catch(err => {
             console.log(err)
         })
 
@@ -206,6 +210,7 @@ return (
                 setIsOpen={setisSidePanelOpen}
                 project={project}
                 onlineUsers={onlineUsers}
+                user={user}
             />
 
         </section>
@@ -239,9 +244,11 @@ return (
     isOpen={isModalOpen}
     setIsOpen={setIsModalOpen}
     users={users}
+    project={project}
     selectedUserId={selectedUserId}
     handleUserClick={handleUserClick}
     addCollaborators={addCollaborators}
+    
 />
 
   </main>
