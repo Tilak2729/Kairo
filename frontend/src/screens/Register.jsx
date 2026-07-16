@@ -33,57 +33,82 @@ const Register = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-900 font-sans">
-      <div className="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-md text-white">
-        <h2 className="text-2xl font-bold mb-6 text-center">Register</h2>
+    <div className="min-h-screen flex items-center justify-center bg-[#1e1e1e] font-sans">
+      <div className="bg-[#252526] border border-[#3c3c3c] rounded-md shadow-2xl w-full max-w-md mx-4 overflow-hidden">
 
-        <form onSubmit={submitHandler}>
-          {error && (
-            <p className="text-red-500 text-sm mb-4 text-center">{error}</p>
-          )}
+        {/* title bar */}
+        <div className="flex items-center gap-1.5 h-9 px-4 bg-[#2d2d2d] border-b border-[#3c3c3c]">
+          <span className="w-2.5 h-2.5 rounded-full bg-[#ff5f56]"></span>
+          <span className="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]"></span>
+          <span className="w-2.5 h-2.5 rounded-full bg-[#27c93f]"></span>
+          <span className="ml-3 text-[12px] font-mono text-[#858585]">register.jsx</span>
+        </div>
 
-          <div className="mb-5">
-            <label htmlFor="email" className="block mb-2 text-gray-300">
-              Email
-            </label>
-            <input
-              onChange={(e) => setEmail(e.target.value)}
-              type="email"
-              id="email"
-              placeholder="Enter your email"
-              required
-              className="w-full p-3 rounded-md bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+        <div className="px-8 pt-8 pb-8 text-white">
+
+          <div className="flex flex-col items-center mb-8">
+            <div className="w-11 h-11 rounded-md bg-[#0e639c] flex items-center justify-center mb-4">
+              <i className="ri-user-add-line text-white text-xl"></i>
+            </div>
+            <h2 className="text-xl font-semibold text-white">
+              Create an account
+            </h2>
+            <p className="text-[13px] text-[#858585] mt-1 font-mono">
+              // set up your workspace
+            </p>
           </div>
 
-          <div className="mb-5">
-            <label htmlFor="password" className="block mb-2 text-gray-300">
-              Password
-            </label>
-            <input
-              onChange={(e) => setPassword(e.target.value)}
-              type="password"
-              id="password"
-              placeholder="Enter your password"
-              required
-              className="w-full p-3 rounded-md bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
+          <form onSubmit={submitHandler}>
+            {error && (
+              <div className="flex items-center gap-2 bg-[#3a1d1d] border border-[#5a2626] text-[#f48771] text-[13px] rounded-sm px-3 py-2 mb-5">
+                <i className="ri-error-warning-line shrink-0"></i>
+                <p>{error}</p>
+              </div>
+            )}
 
-          <button
-            type="submit"
-            className="w-full py-3 rounded-md bg-blue-600 hover:bg-blue-700 font-semibold transition-colors"
-          >
-            Register
-          </button>
-        </form>
+            <div className="mb-5">
+              <label htmlFor="email" className="block mb-2 text-[#cccccc] text-[13px] font-medium">
+                Email
+              </label>
+              <input
+                onChange={(e) => setEmail(e.target.value)}
+                type="email"
+                id="email"
+                placeholder="Enter your email"
+                required
+                className="w-full px-3.5 py-2.5 rounded-sm bg-[#3c3c3c] border border-[#3c3c3c] text-[#e6e6e6] text-sm placeholder:text-[#8a8a8a] outline-none focus:border-[#3794ff] transition-colors duration-100"
+              />
+            </div>
 
-        <p className="mt-4 text-center text-gray-400">
-          Already have an account?{' '}
-          <Link to="/login" className="text-blue-500 hover:underline">
-            Login
-          </Link>
-        </p>
+            <div className="mb-6">
+              <label htmlFor="password" className="block mb-2 text-[#cccccc] text-[13px] font-medium">
+                Password
+              </label>
+              <input
+                onChange={(e) => setPassword(e.target.value)}
+                type="password"
+                id="password"
+                placeholder="Enter your password"
+                required
+                className="w-full px-3.5 py-2.5 rounded-sm bg-[#3c3c3c] border border-[#3c3c3c] text-[#e6e6e6] text-sm placeholder:text-[#8a8a8a] outline-none focus:border-[#3794ff] transition-colors duration-100"
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="w-full py-2.5 rounded-sm bg-[#0e639c] hover:bg-[#1177bb] text-white text-sm font-medium transition-colors duration-100"
+            >
+              Register
+            </button>
+          </form>
+
+          <p className="mt-7 text-center text-[#858585] text-[13px]">
+            Already have an account?{' '}
+            <Link to="/login" className="text-[#3794ff] hover:text-[#5aa8ff] transition-colors duration-100">
+              Login
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );

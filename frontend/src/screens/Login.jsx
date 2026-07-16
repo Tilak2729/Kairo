@@ -25,16 +25,34 @@ const Login = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-900">
-      <div className="bg-slate-800 rounded-2xl shadow-2xl w-full max-w-md mx-4">
-        <div className="px-8 pt-12 pb-8">
-          <h2 className="text-3xl font-semibold text-white text-center mb-12">
-            Login
-          </h2>
-          
-          <form onSubmit={submitHandler} className="space-y-6">
+    <div className="min-h-screen flex items-center justify-center bg-[#1e1e1e] font-sans">
+      <div className="bg-[#252526] border border-[#3c3c3c] rounded-md shadow-2xl w-full max-w-md mx-4 overflow-hidden">
+
+        {/* title bar */}
+        <div className="flex items-center gap-1.5 h-9 px-4 bg-[#2d2d2d] border-b border-[#3c3c3c]">
+          <span className="w-2.5 h-2.5 rounded-full bg-[#ff5f56]"></span>
+          <span className="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]"></span>
+          <span className="w-2.5 h-2.5 rounded-full bg-[#27c93f]"></span>
+          <span className="ml-3 text-[12px] font-mono text-[#858585]">login.jsx</span>
+        </div>
+
+        <div className="px-8 pt-8 pb-8">
+
+          <div className="flex flex-col items-center mb-8">
+            <div className="w-11 h-11 rounded-md bg-[#0e639c] flex items-center justify-center mb-4">
+              <i className="ri-code-s-slash-line text-white text-xl"></i>
+            </div>
+            <h2 className="text-xl font-semibold text-white">
+              Welcome back
+            </h2>
+            <p className="text-[13px] text-[#858585] mt-1 font-mono">
+              // sign in to continue
+            </p>
+          </div>
+
+          <form onSubmit={submitHandler} className="space-y-5">
             <div>
-              <label htmlFor="email" className="block text-gray-400 text-sm font-medium mb-3">
+              <label htmlFor="email" className="block text-[#cccccc] text-[13px] font-medium mb-2">
                 Email
               </label>
               <input
@@ -42,12 +60,12 @@ const Login = () => {
                 type="email"
                 id="email"
                 placeholder="Enter your email"
-                className="w-full px-4 py-4 bg-slate-700 text-white text-base rounded-xl border-0 outline-none focus:ring-0 placeholder-gray-500"
+                className="w-full px-3.5 py-2.5 bg-[#3c3c3c] text-[#e6e6e6] text-sm rounded-sm border border-[#3c3c3c] outline-none focus:border-[#3794ff] placeholder:text-[#8a8a8a] transition-colors duration-100"
               />
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-gray-400 text-sm font-medium mb-3">
+              <label htmlFor="password" className="block text-[#cccccc] text-[13px] font-medium mb-2">
                 Password
               </label>
               <input
@@ -55,23 +73,23 @@ const Login = () => {
                 type="password"
                 id="password"
                 placeholder="Enter your password"
-                className="w-full px-4 py-4 bg-slate-700 text-white text-base rounded-xl border-0 outline-none focus:ring-0 placeholder-gray-500"
+                className="w-full px-3.5 py-2.5 bg-[#3c3c3c] text-[#e6e6e6] text-sm rounded-sm border border-[#3c3c3c] outline-none focus:border-[#3794ff] placeholder:text-[#8a8a8a] transition-colors duration-100"
               />
             </div>
 
             <div className="pt-2">
               <button
                 type="submit"
-                className="w-full py-4 bg-blue-500 text-white text-base font-semibold rounded-xl hover:bg-blue-600 transition-colors duration-200"
+                className="w-full py-2.5 bg-[#0e639c] text-white text-sm font-medium rounded-sm hover:bg-[#1177bb] transition-colors duration-100"
               >
                 Login
               </button>
             </div>
           </form>
 
-          <p className="text-center text-gray-400 text-sm mt-8">
+          <p className="text-center text-[#858585] text-[13px] mt-7">
             Don't have an account?{" "}
-            <Link to="/register" className="text-blue-500 hover:text-blue-400 transition-colors">
+            <Link to="/register" className="text-[#3794ff] hover:text-[#5aa8ff] transition-colors duration-100">
               Create one
             </Link>
           </p>
