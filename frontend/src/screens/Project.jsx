@@ -1,6 +1,7 @@
 import React,{useState, useEffect, useContext, useRef} from 'react'
 import { useLocation } from 'react-router-dom'
 import axios from '../config/axios'
+import toast from "react-hot-toast";
 import {
     sendMessage,
     sendFileUpdate
@@ -33,6 +34,7 @@ const Project = () => {
     
     const {
     project,
+    setProject,
     users,
     messages,
     setMessages,
@@ -77,24 +79,50 @@ const {
         });
 };
 
-  function addCollaborators() {
+function addCollaborators() {
 
-        axios.put("/projects/add-user", {
-            projectId: project._id,
-            users: Array.from(selectedUserId)
-        }).then((res) => {
+    axios.put("/projects/add-user", {
 
-    setProject(res.data.project);
+        projectId: project._id,
+        users: Array.from(selectedUserId),
 
-    setSelectedUserId(new Set());
+    })
+    .then((res) => {
 
-    setIsModalOpen(false);
+        setProject(res.data.project);
 
-}).catch(err => {
-            console.log(err)
-        })
+        const addedUsers = users.filter((u) =>
+            selectedUserId.has(u._id)
+        );
 
-    }
+        setSelectedUserId(new Set());
+
+        setIsModalOpen(false);
+
+        if (addedUsers.length === 1) {
+
+            toast.success(
+                `${addedUsers[0].email} added to project`
+            );
+
+        } else {
+
+            toast.success(
+                `${addedUsers.length} collaborators added`
+            );
+
+        }
+
+    })
+    .catch((err) => {
+
+        console.log(err);
+
+        toast.error("Unable to add collaborators.");
+
+    });
+
+}
     function createStarterFiles() {
 
     setFileTree(starterProject);

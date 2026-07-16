@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const AddCollaboratorModal = ({
     isOpen,
@@ -10,6 +10,15 @@ const AddCollaboratorModal = ({
     project,
 }) => {
 const [search, setSearch] = useState("");
+useEffect(() => {
+
+    if (!isOpen) {
+
+        setSearch("");
+
+    }
+
+}, [isOpen]);
     if (!isOpen) return null;
 const availableUsers = users
     .filter(
@@ -34,7 +43,10 @@ const availableUsers = users
                     </h2>
 
                     <button
-                        onClick={() => setIsOpen(false)}
+                        onClick={() => {
+                            setSearch("");
+                            setIsOpen(false);
+                        }}
                         title="Close"
                         className="p-1 rounded-sm text-[#858585] hover:text-[#cccccc] hover:bg-[#3c3c3c] transition-colors duration-100"
                     >
