@@ -1,14 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import axios from "../config/axios";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../context/user.context";
 
 const Home = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [projectName, setProjectName] = useState("");
   const [projects, setProjects] = useState([]);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const profileMenuRef = useRef(null);
 
   const navigate = useNavigate();
-
+  const { user, setUser } = useContext(UserContext);
   const fetchProjects = async () => {
     try {
       const res = await axios.get("/projects/all");
@@ -21,6 +24,31 @@ const Home = () => {
   useEffect(() => {
     fetchProjects();
   }, []);
+  useEffect(() => {
+
+    const handleClickOutside = (event) => {
+
+        if (
+            profileMenuRef.current &&
+            !profileMenuRef.current.contains(event.target)
+        ) {
+            setIsProfileOpen(false);
+        }
+
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+
+        document.removeEventListener(
+            "mousedown",
+            handleClickOutside
+        );
+
+    };
+
+}, []);
 
   const createProject = async (e) => {
     e.preventDefault();
@@ -62,6 +90,17 @@ const Home = () => {
       );
     }
   };
+  const logout = () => {
+
+    localStorage.removeItem("token");
+
+    setUser(null);
+
+    navigate("/login", {
+        replace: true,
+    });
+
+};
 
   return (
     <main className="min-h-screen bg-[#1e1e1e] text-[#d4d4d4] font-mono">
@@ -79,21 +118,77 @@ const Home = () => {
 
       <div className="max-w-2xl mx-auto px-6 py-10">
 
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <p className="text-xs text-[#6a9955]">// workspace</p>
-            <h1 className="text-2xl font-semibold text-[#4ec9b0]">
-              My Projects
-            </h1>
-          </div>
+<div className="flex justify-between items-center mb-8">
 
-          <button
+    <div>
+
+        <p className="text-xs text-[#6a9955]">
+            // workspace
+        </p>
+
+        <h1 className="text-2xl font-semibold text-[#4ec9b0]">
+            My Projects
+        </h1>
+
+    </div>
+
+    <div className="flex items-center gap-3">
+
+        <button
             onClick={() => setIsModalOpen(true)}
             className="flex items-center gap-2 bg-[#0e639c] text-white px-4 py-2 rounded text-sm hover:bg-[#1177bb] transition"
-          >
-            <span className="text-[#4ec9b0]">+</span> New Project
-          </button>
+        >
+            <span className="text-[#4ec9b0]">+</span>
+            New Project
+        </button>
+
+        <div 
+        ref={profileMenuRef}
+        className="relative">
+
+            <button
+                onClick={() => setIsProfileOpen(prev => !prev)}
+                className="w-10 h-10 rounded-full bg-[#0e639c] text-white font-semibold uppercase hover:bg-[#1177bb] transition"
+            >
+                {user?.email?.charAt(0)}
+            </button>
+
+            {
+                isProfileOpen && (
+
+                    <div className="absolute right-0 mt-2 w-64 bg-[#252526] border border-[#3c3c3c] rounded-md shadow-xl z-50">
+
+                        <div className="px-4 py-3 border-b border-[#3c3c3c]">
+
+                            <p className="text-xs text-[#858585]">
+                                Signed in as
+                            </p>
+
+                            <p className="text-sm text-[#cccccc] truncate mt-1">
+                                {user?.email}
+                            </p>
+
+                        </div>
+
+                        <button
+                            onClick={logout}
+                            className="w-full text-left px-4 py-3 flex items-center gap-2 text-[#f48771] hover:bg-[#2d2d2d] transition"
+                        >
+                            <i className="ri-logout-box-r-line"></i>
+
+                            Logout
+                        </button>
+
+                    </div>
+
+                )
+            }
+
         </div>
+
+    </div>
+
+</div>
 
         {/* Vertical, centered file list */}
         <div className="flex flex-col gap-3">
