@@ -1,6 +1,7 @@
 import Divider from "../layout/Divider";
 import ExplorerPanel from "./ExplorerPanel";
 import CodeEditor from "./CodeEditor";
+import EditorTabs from "./EditorTabs";
 
 const getFileIcon = (filename) => {
     if (!filename) return "ri-file-line text-[#858585]";
@@ -12,59 +13,57 @@ const getFileIcon = (filename) => {
 };
 
 const EditorWorkspace = ({
-    fileTree,
+fileTree,
     setFileTree,
     currentFile,
     setCurrentFile,
+    openFiles,
+    handleCloseTab,
+    handleFileOpen,
     saveTimeout,
     isRemoteUpdate,
     sendFileUpdate,
     onCreateFiles,
-     explorerWidth,
-     startExplorerResize,
-     isExplorerCollapsed,
+    explorerWidth,
+    startExplorerResize,
+    isExplorerCollapsed,
     toggleExplorer,
 }) => {
 
     return (
 
-        <section className="flex flex-col flex-1 h-full bg-[#1e1e1e] text-[#cccccc]">
+        <section className="flex flex-col flex-1 h-full min-h-0 bg-[#1e1e1e] text-[#cccccc]">
 
             {/* Tab bar */}
 
-            <div className="flex items-center h-9 border-b border-[#2d2d2d] bg-[#252526]">
+{/* Editor Header */}
 
-                {
-                    currentFile ? (
+<div className="flex items-center h-9 px-3 border-b border-[#2d2d2d] bg-[#252526]">
 
-                        <div className="flex items-center gap-2 h-full px-3 bg-[#1e1e1e] border-r border-[#2d2d2d] border-t-2 border-t-[#3794ff] text-[13px]">
-                            <i className={`${getFileIcon(currentFile)} text-sm`}></i>
-                            <span>{currentFile}</span>
-                        </div>
+    <div className="flex items-center gap-2 text-[13px] text-[#cccccc]">
 
-                    ) : (
+        <i className="ri-code-s-slash-line text-[#3794ff]"></i>
 
-                        <div className="px-3 text-[13px] text-[#858585]">
-                            No file open
-                        </div>
+        <span className="font-medium">
+            Kairo Editor
+        </span>
 
-                    )
-                }
+    </div>
 
-            </div>
+</div>
 
             {/* Workspace */}
 
-            <div className="flex flex-1 overflow-hidden">
+            <div className="flex flex-1 min-h-0 overflow-hidden">
 
 <ExplorerPanel
     fileTree={fileTree}
     currentFile={currentFile}
-    setCurrentFile={setCurrentFile}
     onCreateFiles={onCreateFiles}
     explorerWidth={explorerWidth}
     isExplorerCollapsed={isExplorerCollapsed}
     toggleExplorer={toggleExplorer}
+    handleFileOpen={handleFileOpen}
 
 />
 
@@ -78,14 +77,27 @@ const EditorWorkspace = ({
     )
 }
 
-<CodeEditor
-    fileTree={fileTree}
-    setFileTree={setFileTree}
-    currentFile={currentFile}
-    saveTimeout={saveTimeout}
-    isRemoteUpdate={isRemoteUpdate}
-    sendFileUpdate={sendFileUpdate}
-/>
+<div className="flex-1 flex flex-col min-w-0 min-h-0 overflow-hidden">
+
+    <EditorTabs
+        openFiles={openFiles}
+        currentFile={currentFile}
+        setCurrentFile={setCurrentFile}
+        handleCloseTab={handleCloseTab}
+    />
+
+    <div className="flex-1 min-h-0 overflow-hidden">
+        <CodeEditor
+            fileTree={fileTree}
+            setFileTree={setFileTree}
+            currentFile={currentFile}
+            saveTimeout={saveTimeout}
+            isRemoteUpdate={isRemoteUpdate}
+            sendFileUpdate={sendFileUpdate}
+        />
+    </div>
+
+</div>
 
             </div>
 

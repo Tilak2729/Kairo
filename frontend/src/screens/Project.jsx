@@ -55,6 +55,7 @@ const {
 
 
 const [currentFile, setCurrentFile] = useState(null);
+const [openFiles, setOpenFiles] = useState([]);
 const { onlineUsers } = useSocketConnection({
     project,
     setMessages,
@@ -77,6 +78,54 @@ const {
 
             return newSelectedUserId;
         });
+};
+const handleFileOpen = (file) => {
+
+    setOpenFiles((prev) => {
+
+        if (prev.includes(file)) {
+            return prev;
+        }
+
+        return [...prev, file];
+
+    });
+
+    setCurrentFile(file);
+
+};
+const handleCloseTab = (file) => {
+
+    setOpenFiles((prev) => {
+
+        const fileIndex = prev.indexOf(file);
+
+        const updatedFiles = prev.filter(
+            (openFile) => openFile !== file
+        );
+
+        if (file === currentFile) {
+
+            if (updatedFiles.length === 0) {
+
+                setCurrentFile(null);
+
+            } else {
+
+                const nextFile =
+                    updatedFiles[fileIndex - 1] ||
+                    updatedFiles[0];
+
+                setCurrentFile(nextFile);
+
+            }
+
+        }
+
+        return updatedFiles;
+
+    });
+
 };
 
 function addCollaborators() {
@@ -123,11 +172,13 @@ function addCollaborators() {
     });
 
 }
-    function createStarterFiles() {
+function createStarterFiles() {
 
     setFileTree(starterProject);
 
     setCurrentFile("index.html");
+
+    setOpenFiles(["index.html"]);
 
 }
 
@@ -259,7 +310,10 @@ return (
             explorerWidth={explorerWidth}
             startExplorerResize={startExplorerResize}
             isExplorerCollapsed={isExplorerCollapsed}
-    toggleExplorer={toggleExplorer}
+            toggleExplorer={toggleExplorer}
+            handleFileOpen={handleFileOpen}
+            openFiles={openFiles}
+            handleCloseTab={handleCloseTab}
         />
 
     }

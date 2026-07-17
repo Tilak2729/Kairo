@@ -9,30 +9,26 @@ const CodeEditor = ({
     sendFileUpdate,
 }) => {
 
-    if (!currentFile) {
+if (!currentFile) {
+    return (
+        <div className="h-[calc(100vh-72px)] w-full flex flex-col items-center justify-center bg-[#1e1e1e] text-[#858585] gap-2">
 
-        return (
+            <i className="ri-file-code-line text-4xl"></i>
 
-            <div className="flex-1 flex flex-col items-center justify-center bg-[#1e1e1e] text-[#858585] gap-2">
+            <p className="text-sm">
+                Select a file to start editing
+            </p>
 
-                <i className="ri-file-code-line text-4xl"></i>
-
-                <p className="text-sm">
-                    Select a file to start editing
-                </p>
-
-            </div>
-
-        );
-
-    }
-
+        </div>
+    );
+}
     return (
 
-        <div className="flex-1">
+
+        <div className="flex-1 min-h-0 overflow-hidden">
 
             <Editor
-                height="100%"
+                height="calc(100vh - 72px)"
                 theme="vs-dark"
                 language={
                     currentFile?.endsWith(".html")

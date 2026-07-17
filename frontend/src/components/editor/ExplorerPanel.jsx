@@ -9,11 +9,11 @@ const getFileIcon = (filename) => {
 const ExplorerPanel = ({
     fileTree,
     currentFile,
-    setCurrentFile,
     onCreateFiles,
     explorerWidth,
     isExplorerCollapsed,
     toggleExplorer,
+    handleFileOpen,
 }) => {
 
     return (
@@ -71,7 +71,7 @@ const ExplorerPanel = ({
 
                         <div
                             key={file}
-                            onClick={() => setCurrentFile(file)}
+                            onClick={() =>  handleFileOpen(file) }
                             className={`group flex items-center gap-2 pl-3 pr-2 py-1.5 cursor-pointer border-l-2 text-[13px] transition-colors duration-100
                             ${
                                 currentFile === file
