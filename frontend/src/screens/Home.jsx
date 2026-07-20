@@ -8,6 +8,11 @@ const Home = () => {
   const [projectName, setProjectName] = useState("");
   const [projects, setProjects] = useState([]);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(null);
+const [renameProject, setRenameProject] = useState(null);
+const [renameName, setRenameName] = useState("");
+const [deleteProject, setDeleteProject] = useState(null);
+const [leaveProject, setLeaveProject] = useState(null);
   const profileMenuRef = useRef(null);
 
   const navigate = useNavigate();
@@ -90,6 +95,95 @@ const Home = () => {
       );
     }
   };
+  const renameProjectHandler = async () => {
+
+    if (!renameName.trim()) return;
+
+    try {
+
+        const res = await axios.patch("/projects/rename", {
+            projectId: renameProject._id,
+            name: renameName.trim(),
+        });
+
+        setProjects((prev) =>
+            prev.map((project) =>
+                project._id === renameProject._id
+                    ? res.data.project
+                    : project
+            )
+        );
+
+        setRenameProject(null);
+        setRenameName("");
+
+    } catch (err) {
+
+        console.log(err);
+
+        alert(
+            err.response?.data?.message ||
+            "Unable to rename project."
+        );
+
+    }
+
+};
+const deleteProjectHandler = async () => {
+
+    try {
+
+        await axios.delete(`/projects/${deleteProject._id}`);
+
+        setProjects(prev =>
+            prev.filter(
+                project => project._id !== deleteProject._id
+            )
+        );
+
+        setDeleteProject(null);
+
+    } catch (err) {
+
+        console.log(err);
+
+        alert(
+            err.response?.data?.error ||
+            "Unable to delete project."
+        );
+
+    }
+
+};
+const leaveProjectHandler = async () => {
+
+    try {
+
+        await axios.patch(
+            `/projects/leave/${leaveProject._id}`
+        );
+
+        setProjects(prev =>
+            prev.filter(
+                project =>
+                    project._id !== leaveProject._id
+            )
+        );
+
+        setLeaveProject(null);
+
+    } catch (err) {
+
+        console.log(err);
+
+        alert(
+            err.response?.data?.error ||
+            "Unable to leave project."
+        );
+
+    }
+
+};
   const logout = () => {
 
     localStorage.removeItem("token");
@@ -205,13 +299,87 @@ const Home = () => {
               }
               className="group bg-[#252526] border border-[#333333] rounded-md px-5 py-4 hover:border-[#0e639c] hover:bg-[#2a2d2e] transition cursor-pointer"
             >
-              <div className="flex items-center gap-3">
-                <i className="ri-folder-line text-[#dcb67a] text-lg"></i>
+<div className="flex justify-between items-start">
 
-                <h2 className="text-base font-medium text-[#9cdcfe] lowercase group-hover:text-[#4fc1ff] transition">
-                  {project.name}
-                </h2>
-              </div>
+    <div className="flex items-center gap-3">
+
+        <i className="ri-folder-line text-[#dcb67a] text-lg"></i>
+
+        <h2 className="text-base font-medium text-[#9cdcfe] lowercase group-hover:text-[#4fc1ff] transition">
+            {project.name}
+        </h2>
+
+    </div>
+
+<div className="relative">
+
+    <button
+        onClick={(e) => {
+            e.stopPropagation();
+            setMenuOpen(
+                menuOpen === project._id ? null : project._id
+            );
+        }}
+        className="text-[#858585] hover:text-white p-1 rounded"
+    >
+        <i className="ri-more-2-fill"></i>
+    </button>
+
+{menuOpen === project._id && (
+    <div className="absolute right-0 mt-2 w-44 bg-[#252526] border border-[#3c3c3c] rounded shadow-lg z-50">
+
+        {project.owner?._id === user?._id ? (
+            <>
+
+                <button
+                    onClick={(e) => {
+                        e.stopPropagation();
+
+                        setRenameProject(project);
+                        setRenameName(project.name);
+
+                        setMenuOpen(null);
+                    }}
+                    className="w-full text-left px-4 py-3 hover:bg-[#2d2d2d]"
+                >
+                    Rename Project
+                </button>
+
+                <button
+                    onClick={(e) => {
+                        e.stopPropagation();
+
+                        setDeleteProject(project);
+
+                        setMenuOpen(null);
+                    }}
+                    className="w-full text-left px-4 py-3 text-red-400 hover:bg-[#2d2d2d]"
+                >
+                    Delete Project
+                </button>
+
+            </>
+        ) : (
+            <button
+                onClick={(e) => {
+                    e.stopPropagation();
+
+                    setLeaveProject(project);
+
+                    setMenuOpen(null);
+                }}
+                className="w-full text-left px-4 py-3 text-yellow-400 hover:bg-[#2d2d2d]"
+            >
+                Leave Project
+            </button>
+        )}
+
+    </div>
+)}
+
+</div>
+
+</div>
 
               <div className="mt-2 ml-7 flex items-center gap-2 text-[#6a9955] text-sm">
                 <i className="ri-user-3-line"></i>
@@ -281,6 +449,135 @@ const Home = () => {
 
         </div>
       )}
+      {
+    renameProject && (
+
+        <div className="fixed inset-0 bg-black/60 flex justify-center items-center">
+
+            <div className="bg-[#252526] border border-[#3c3c3c] rounded-md p-6 w-[400px]">
+
+                <h2 className="text-base font-semibold text-[#4ec9b0]">
+                    Rename Project
+                </h2>
+
+                <p className="text-xs text-[#6a9955] mb-5">
+                    // enter a new project name
+                </p>
+
+                <input
+                    type="text"
+                    value={renameName}
+                    onChange={(e) =>
+                        setRenameName(e.target.value)
+                    }
+                    className="w-full bg-[#3c3c3c] p-3 rounded outline-none"
+                />
+
+                <div className="flex justify-end gap-3 mt-6">
+
+                    <button
+                        onClick={() => {
+                            setRenameProject(null);
+                            setRenameName("");
+                        }}
+                        className="px-4 py-2 bg-[#3c3c3c] rounded"
+                    >
+                        Cancel
+                    </button>
+
+                   <button
+    onClick={renameProjectHandler}
+    className="px-4 py-2 bg-[#0e639c] rounded"
+>
+    Save
+</button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    )
+}
+{
+deleteProject && (
+
+<div className="fixed inset-0 bg-black/60 flex justify-center items-center">
+
+<div className="bg-[#252526] border border-[#3c3c3c] rounded-md p-6 w-[400px]">
+
+<h2 className="text-lg font-semibold text-red-400">
+Delete Project
+</h2>
+
+<p className="text-sm mt-3 text-[#cccccc]">
+This action cannot be undone.
+</p>
+
+<div className="flex justify-end gap-3 mt-8">
+
+<button
+onClick={() => setDeleteProject(null)}
+className="px-4 py-2 bg-[#3c3c3c] rounded"
+>
+Cancel
+</button>
+
+<button
+onClick={deleteProjectHandler}
+className="px-4 py-2 bg-red-600 rounded"
+>
+Delete
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+)
+}
+{
+leaveProject && (
+
+<div className="fixed inset-0 bg-black/60 flex justify-center items-center">
+
+<div className="bg-[#252526] border border-[#3c3c3c] rounded-md p-6 w-[400px]">
+
+<h2 className="text-lg font-semibold text-yellow-400">
+Leave Project
+</h2>
+
+<p className="text-sm mt-3 text-[#cccccc]">
+You will lose access to this project.
+</p>
+
+<div className="flex justify-end gap-3 mt-8">
+
+<button
+onClick={() => setLeaveProject(null)}
+className="px-4 py-2 bg-[#3c3c3c] rounded"
+>
+Cancel
+</button>
+
+<button
+onClick={leaveProjectHandler}
+className="px-4 py-2 bg-yellow-600 rounded"
+>
+Leave
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+)
+}
     </main>
   );
 };

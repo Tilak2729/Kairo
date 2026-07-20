@@ -26,12 +26,35 @@ router.put('/add-user',
         .custom((users) => users.every(user => typeof user === 'string')).withMessage('Each user must be a string'),
     projectController.addUserToProject
 )
+router.patch(
+    "/rename",
+    authMiddleware.authUser,
+    body("projectId")
+        .isString()
+        .withMessage("Project ID is required"),
+
+    body("name")
+        .trim()
+        .notEmpty()
+        .withMessage("Project name is required"),
+
+    projectController.renameProject
+);
 
 router.get('/get-project/:projectId',
     authMiddleware.authUser,
     projectController.getProjectById
-)
-
+);
+router.delete(
+    "/:projectId",
+    authMiddleware.authUser,
+    projectController.deleteProject
+);
+router.patch(
+    "/leave/:projectId",
+    authMiddleware.authUser,
+    projectController.leaveProject
+);
 
 
 

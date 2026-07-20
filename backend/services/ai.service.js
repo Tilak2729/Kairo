@@ -39,7 +39,7 @@ export const selectRelevantFiles = async (prompt, fileTree = {}) => {
 
     const response = await ai.models.generateContent({
 
-        model: "gemini-2.5-flash",
+        model: "gemini-3.1-flash-lite",
 
         contents: `
 You are a senior software engineer.
@@ -101,7 +101,7 @@ Rules:
 };
 export const generateResult = async (prompt, fileTree = {}) => {
   const response = await ai.models.generateContent({
-    model: "gemini-2.5-flash",
+    model: "gemini-3.1-flash-lite",
 
     contents: `
     User Request:

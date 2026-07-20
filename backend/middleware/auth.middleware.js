@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import redisClient from '../services/redis.service.js';
+import userModel from "../models/user.model.js";
 
 export const authUser = async (req, res, next) => {
     try {
@@ -14,10 +15,21 @@ export const authUser = async (req, res, next) => {
             return res.status(401).send({ error: 'Please authenticate' });
         }
 
+const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = decoded;
-        next();
+const user = await userModel.findOne({
+    email: decoded.email
+});
+
+if (!user) {
+    return res.status(401).json({
+        error: "User not found",
+    });
+}
+
+req.user = user;
+
+next();
     } catch (error) {
         res.status(401).send({ error: 'Please authenticate' });
     }

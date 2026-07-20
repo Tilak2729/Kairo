@@ -12,6 +12,7 @@ export const createProject = async ({
     try {
         project = await projectModel.create({
             name,
+            owner: userId,
             users: [ userId ]
         });
     } catch (error) {
@@ -30,11 +31,11 @@ export const getAllProjectByUserId = async ({userId}) => {
         throw new Error('User id is required')
     }
 
-    const allUserProjects = await projectModel.find({
-        users: userId
-    })
+    const projects = await projectModel.find({
+    users: userId
+}).populate("owner", "email");
 
-    return allUserProjects
+return projects;
 }
 
 export const addUsersToProject = async ({ projectId, users, userId }) => {
@@ -114,3 +115,89 @@ export const getProjectById = async ({ projectId }) => {
 
     return project;
 }
+export const renameProject = async ({ projectId, name }) => {
+    if (!projectId) {
+        throw new Error("projectId is required");
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(projectId)) {
+        throw new Error("Invalid projectId");
+    }
+
+    if (!name || !name.trim()) {
+        throw new Error("Project name is required");
+    }
+
+    const updatedProject = await projectModel.findOneAndUpdate(
+        {
+            _id: projectId,
+        },
+        {
+            name: name.trim(),
+        },
+        {
+            new: true,
+        }
+    );
+
+    if (!updatedProject) {
+        throw new Error("Project not found");
+    }
+
+    return updatedProject;
+};
+
+export const deleteProject = async ({ projectId, userId }) => {
+
+    if (!mongoose.Types.ObjectId.isValid(projectId)) {
+        throw new Error("Invalid project id");
+    }
+
+    const project = await projectModel.findById(projectId);
+
+    if (!project) {
+        throw new Error("Project not found");
+    }
+
+    if (project.owner.toString() !== userId.toString()) {
+        throw new Error("Only owner can delete project");
+    }
+
+    await project.deleteOne();
+
+    return {
+        message: "Project deleted successfully",
+    };
+};
+export const leaveProject = async ({ projectId, userId }) => {
+
+    if (!mongoose.Types.ObjectId.isValid(projectId)) {
+        throw new Error("Invalid project id");
+    }
+
+    const project = await projectModel.findById(projectId);
+
+    if (!project) {
+        throw new Error("Project not found");
+    }
+
+    if (project.owner.toString() === userId.toString()) {
+        throw new Error("Owner cannot leave the project");
+    }
+
+    await projectModel.findByIdAndUpdate(
+        projectId,
+        {
+            $pull: {
+                users: userId,
+            },
+        },
+        {
+            new: true,
+        }
+    );
+
+    return {
+        message: "Left project successfully",
+    };
+};

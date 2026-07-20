@@ -9,6 +9,11 @@ const projectSchema = new mongoose.Schema(
       unique: true,
       trim: true,
     },
+    owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "user",
+    required: true,
+},
 
     users: [
       {
