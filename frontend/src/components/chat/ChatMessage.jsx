@@ -1,5 +1,13 @@
 const ChatMessage = ({ msg, user, WriteAiMessage }) => {
-
+if (msg.sender._id === "system") {
+    return (
+        <div className="flex justify-center my-2">
+            <div className="text-xs text-gray-400 bg-[#2d2d2d] px-3 py-1 rounded-full">
+                {msg.message}
+            </div>
+        </div>
+    );
+}
     return (
         <div
             className={`${msg.sender._id === "AI" ? "max-w-[90%]" : "max-w-[78%]"}

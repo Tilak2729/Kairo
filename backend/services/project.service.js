@@ -1,6 +1,7 @@
 import projectModel from '../models/project.model.js';
+import userModel from "../models/user.model.js";
 import mongoose from "mongoose";
-import User from '../models/user.model.js';
+// import User from '../models/user.model.js';
 
 export const createProject = async ({
     name, userId
@@ -94,6 +95,20 @@ const updatedProject = await projectModel
     )
     .populate("users", "email");
 
+const addedUsers = updatedProject.users.filter(user =>
+    users.includes(user._id.toString())
+);
+
+addedUsers.forEach(user => {
+    updatedProject.messages.push({
+    senderId: "system",
+    senderEmail: "System",
+    message: `${user.email} joined the project`,
+});
+});
+
+await updatedProject.save();
+
 return updatedProject;
 
 
@@ -185,17 +200,17 @@ export const leaveProject = async ({ projectId, userId }) => {
         throw new Error("Owner cannot leave the project");
     }
 
-    await projectModel.findByIdAndUpdate(
-        projectId,
-        {
-            $pull: {
-                users: userId,
-            },
-        },
-        {
-            new: true,
-        }
-    );
+    const user = await userModel.findById(userId);
+
+    project.users.pull(userId);
+
+    project.messages.push({
+        senderId: "system",
+        senderEmail: "System",
+        message: `${user.email} left the project`,
+    });
+
+    await project.save();
 
     return {
         message: "Left project successfully",

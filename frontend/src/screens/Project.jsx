@@ -137,12 +137,27 @@ function addCollaborators() {
 
     })
     .then((res) => {
-
-        setProject(res.data.project);
-
         const addedUsers = users.filter((u) =>
             selectedUserId.has(u._id)
         );
+
+        setProject(res.data.project);
+        addedUsers.forEach((member) => {
+
+    setMessages(prev => [
+        ...prev,
+        {
+            sender: {
+                _id: "system",
+                email: "System",
+            },
+            message: `${member.email} joined the project`,
+        },
+    ]);
+
+});
+
+        
 
         setSelectedUserId(new Set());
 
