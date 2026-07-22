@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axiosInstance from '../config/axios';
 import { UserContext } from '../context/user.context';
+import toast from "react-hot-toast";
 
 const Register = () => {
   const [email, setEmail] = useState('');
@@ -18,17 +19,21 @@ const Register = () => {
     try {
       const res = await axiosInstance.post('/users/register', { email, password });
 
-      console.log(res.data);
-
       if (res.data.token) {
         localStorage.setItem('token', res.data.token);
         setUser(res.data.user);
       }
+      toast.success("Account created successfully!");
 
       navigate('/');
     } catch (err) {
-      console.error(err.response?.data || err.message);
-      setError(err.response?.data?.message || 'Registration failed');
+      const message =
+        err.response?.data?.message ||
+        "Registration failed";
+
+    setError(message);
+
+    toast.error(message);
     }
   }
 

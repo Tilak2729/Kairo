@@ -64,10 +64,7 @@ next();
 })
 
 io.on('connection', socket => {
-    console.log("Socket connected", socket.id);
     socket.roomId = socket.project._id.toString();
-
-    console.log("a user connected");
     socket.join(socket.roomId);
     onlineUsers.set(socket.user._id, {
     socketId: socket.id,
@@ -120,8 +117,6 @@ const fileSelection = await selectRelevantFiles(
     latestProject.fileTree || {}
 );
 
-console.log("========== FILE SELECTION ==========");
-console.log(fileSelection);
 
 let selectedFilesResponse;
 
@@ -131,16 +126,7 @@ try {
 
     selectedFilesResponse = JSON.parse(cleanedSelection);
 
-    console.log("Parsed Selection:");
-    console.log(selectedFilesResponse);
-
 } catch (err) {
-
-    console.log("RAW FILE SELECTION:");
-    console.log(fileSelection);
-
-    console.log("CLEANED FILE SELECTION:");
-    console.log(cleanAIResponse(fileSelection));
 
     throw err;
 }
@@ -157,10 +143,6 @@ for (const path of selectedFilesResponse.files || []) {
 
 }
 
-console.log("========== SELECTED FILES ==========");
-console.log(Object.keys(selectedFileTree));
-console.log("====================================");
-
 const result = await generateResult(
     prompt,
     selectedFileTree
@@ -174,9 +156,6 @@ const cleanedResult = result
 const aiResponse = JSON.parse(
     cleanAIResponse(result)
 );
-console.log("========== AI RESPONSE ==========");
-console.log(JSON.stringify(aiResponse, null, 2));
-console.log("=================================");
 const refreshedProject = await projectModel.findById(socket.roomId);
 
 const updatedFileTree = {
@@ -205,8 +184,6 @@ if (operation.type === "replace") {
     const existingFile = updatedFileTree[operation.path];
 
     if (!existingFile) {
-
-        console.log(`File not found: ${operation.path}`);
         continue;
 
     }
@@ -221,8 +198,6 @@ if (operation.type === "replace") {
             operation.find,
             operation.replace
         );
-
-        console.log(`Patched ${operation.path} (Exact Match)`);
 
     }
 
@@ -246,13 +221,8 @@ if (operation.type === "replace") {
                 operation.replace
             );
 
-            console.log(`Patched ${operation.path} (Whitespace Match)`);
 
         } else {
-
-            console.log(`Patch failed in ${operation.path}`);
-            console.log("Could not find:");
-            console.log(operation.find);
 
             continue;
 
@@ -271,9 +241,6 @@ if (operation.type === "replace") {
 }
 
 }
-console.log("========== UPDATED FILE TREE ==========");
-console.log(Object.keys(updatedFileTree));
-console.log("=======================================");
 // Save generated files to database
 await projectModel.findByIdAndUpdate(
     socket.roomId,
@@ -320,7 +287,6 @@ io.to(socket.roomId).emit("project-message", {
 
 });
 socket.on("file-update", async (data) => {
-    console.log("Backend received file-update");
 
     try {
 
@@ -330,7 +296,6 @@ socket.on("file-update", async (data) => {
                 fileTree: data.fileTree
             }
         );
-        console.log("Broadcasting to room:", socket.roomId);
 
         socket.broadcast.to(socket.roomId).emit("file-update", {
             fileTree: data.fileTree
@@ -372,7 +337,6 @@ socket.on("disconnect", () => {
             .map(([userId]) => userId)
     ]);
 
-    console.log("user disconnected");
 });
 });
 

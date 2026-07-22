@@ -56,8 +56,6 @@ const useSocketConnection = ({
 
         receiveMessage("file-update", (data) => {
 
-            console.log("Live File Update");
-
             isRemoteUpdate.current = true;
 
             setFileTree(data.fileTree);
@@ -65,8 +63,6 @@ const useSocketConnection = ({
         });
 
         receiveMessage("online-users", (users) => {
-
-            console.log("Online Users:", users);
 
             setOnlineUsers(users);
 

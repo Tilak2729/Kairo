@@ -22,7 +22,6 @@ import Markdown from 'markdown-to-jsx';
 
 const Project = () => {
     const location = useLocation();
-    console.log(location.state)
     const [isSidePanelOpen, setisSidePanelOpen] = useState(false);
     const [ isModalOpen, setIsModalOpen ] = useState(false);
     const [ selectedUserId, setSelectedUserId ] = useState(new Set()) ;

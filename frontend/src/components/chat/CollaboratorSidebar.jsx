@@ -5,7 +5,6 @@ const CollaboratorSidebar = ({
     onlineUsers,
     user,
 }) => {
-console.log(project.users);
     return (
         <div
             className={`sidePanel w-full h-full flex flex-col gap-2 bg-[#252526] absolute transition-all duration-200 ${
@@ -32,7 +31,11 @@ console.log(project.users);
                     project.users.map((member) => (
 
                         <div
-                            key={`${member._id}-${member.email}`}
+                            key={
+    typeof member === "string"
+        ? member
+        : member._id
+}
                             className="user cursor-pointer hover:bg-[#2a2d2e] rounded-sm p-2 flex gap-3 items-center transition-colors duration-100"
                         >
 
@@ -71,7 +74,8 @@ console.log(project.users);
     </h1>
 
     {
-        member.email === user?.email && (
+        typeof member !== "string" &&
+    member.email === user?.email && (
             <span className="text-[10px] bg-[#0e639c] text-white px-1.5 py-0.5 rounded">
                 You
             </span>

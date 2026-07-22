@@ -33,8 +33,6 @@ export const sendMessage = (eventName, data) => {
 
 export const sendFileUpdate = (fileTree) => {
 
-    console.log("Sending File Update");
-
     socketInstance.emit("file-update", {
         fileTree
     });

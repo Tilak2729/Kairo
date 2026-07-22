@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext, useRef } from "react";
 import axios from "../config/axios";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/user.context";
+import toast from "react-hot-toast";
 
 const Home = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -67,7 +68,7 @@ const [leaveProject, setLeaveProject] = useState(null);
 
       // Add new project immediately
       setProjects((prev) => [...prev, res.data]);
-
+      toast.success("Project created");
       // Clear input
       setProjectName("");
 
@@ -89,10 +90,10 @@ const [leaveProject, setLeaveProject] = useState(null);
     } catch (err) {
       console.log(err);
 
-      alert(
-        err.response?.data?.message ||
-          "Unable to create project."
-      );
+      toast.error(
+    err.response?.data?.message ||
+    "Unable to create project."
+);
     }
   };
   const renameProjectHandler = async () => {
@@ -116,12 +117,13 @@ const [leaveProject, setLeaveProject] = useState(null);
 
         setRenameProject(null);
         setRenameName("");
+        toast.success("Project renamed");
 
     } catch (err) {
 
         console.log(err);
 
-        alert(
+        toast.error(
             err.response?.data?.message ||
             "Unable to rename project."
         );
@@ -142,13 +144,14 @@ const deleteProjectHandler = async () => {
         );
 
         setDeleteProject(null);
+        toast.success("Project deleted");
 
     } catch (err) {
 
         console.log(err);
 
-        alert(
-            err.response?.data?.error ||
+        toast.error(
+            err.response?.data?.message ||
             "Unable to delete project."
         );
 
@@ -171,24 +174,27 @@ const leaveProjectHandler = async () => {
         );
 
         setLeaveProject(null);
+        toast.success("You left the project");
 
     } catch (err) {
 
         console.log(err);
 
-        alert(
-            err.response?.data?.error ||
+        toast.error(
+            err.response?.data?.message ||
             "Unable to leave project."
         );
 
     }
 
 };
-  const logout = () => {
+const logout = () => {
 
     localStorage.removeItem("token");
 
     setUser(null);
+
+    toast.success("Logged out");
 
     navigate("/login", {
         replace: true,

@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import axiosInstance from "../config/axios";
 import { UserContext } from "../context/user.context";
 
@@ -14,13 +15,16 @@ const Login = () => {
     axiosInstance
       .post("/users/login", { email, password })
       .then((res) => {
-        console.log(res.data);
         localStorage.setItem("token", res.data.token);
         setUser(res.data.user);
+        toast.success("Welcome back!");
         navigate("/");
       })
       .catch((err) => {
-        console.log(err.response.data);
+        toast.error(
+        err.response?.data?.message ||
+        "Invalid email or password."
+    );
       });
   }
 
