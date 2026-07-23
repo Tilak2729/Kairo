@@ -46,7 +46,7 @@ const Register = () => {
           <span className="w-2.5 h-2.5 rounded-full bg-[#ff5f56]"></span>
           <span className="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]"></span>
           <span className="w-2.5 h-2.5 rounded-full bg-[#27c93f]"></span>
-          <span className="ml-3 text-[12px] font-mono text-[#858585]">register.jsx</span>
+          <span className="ml-3 text-[12px] font-mono text-[#858585]">register page</span>
         </div>
 
         <div className="px-8 pt-8 pb-8 text-white">
